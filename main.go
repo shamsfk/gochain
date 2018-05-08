@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	bc "./blockchain"
 	cons "./console"
 )
@@ -14,14 +16,15 @@ func main() {
 	data = &bc.BlockData{Data: "Send 2 more BTC to Ivan"}
 	b.AddBlock(data)
 
-	// for _, block := range b.GetBlocks() {
-	// 	fmt.Printf("Index: %x\n", block.Index)
-	// 	fmt.Printf("PrevHash: %x\n", block.PrevHash)
-	// 	fmt.Printf("Data: %x\n", block.Data.ToBytes())
-	// 	fmt.Printf("Hash: %x\n", block.Hash)
-	// 	fmt.Println()
-	// }
-
 	console := cons.NewConsole()
+
+	console.RegisterFunction("printBlocks", func() {
+		for _, block := range b.GetBlocks() {
+			fmt.Println()
+			fmt.Println(block.ToString())
+			fmt.Println()
+		}
+	})
+
 	console.Run()
 }

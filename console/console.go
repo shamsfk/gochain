@@ -10,31 +10,40 @@ import (
 
 // Console struct
 type Console struct {
-	commands []string
+	vm *otto.Otto
 }
 
 // NewConsole creates a console
 func NewConsole() *Console {
-	return &Console{}
+	c := &Console{}
+	c.vm = otto.New()
+
+	return c
+}
+
+// RegisterFunction binds Go function to JS virtual machine
+func (c Console) RegisterFunction(name string, function interface{}) {
+	c.vm.Set(name, function)
 }
 
 // Run executes console in a blocking endless loop
-func (c *Console) Run() {
-	vm := otto.New()
+func (c Console) Run() {
 	for {
 		reader := bufio.NewReader(os.Stdin)
 		fmt.Print("> ")
 		text, _ := reader.ReadString('\n')
 
-		value, err := vm.Run(text)
+		if text == ".exit\n" {
+			return
+		}
+
+		value, err := c.vm.Run(text)
 		if err != nil {
 			fmt.Println("Error:", err)
 		} else {
-			fmt.Println(value)
-		}
-
-		if c.commands[len(c.commands)-1] != text {
-			c.commands = append(c.commands, text)
+			if value.IsDefined() {
+				fmt.Println(value)
+			}
 		}
 
 		// TODO: add up arrow command repeation

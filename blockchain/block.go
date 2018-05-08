@@ -27,6 +27,17 @@ type Block struct {
 	Hash      []byte
 }
 
+// ToString returns string representation of a block
+func (b *Block) ToString() string {
+	return fmt.Sprintf("Index: %v\nTimestamp: %v\nData: %s\nPrevHash: %x\nHash: %x",
+		b.Index,
+		b.Timestamp,
+		b.Data.ToBytes(),
+		b.PrevHash,
+		b.Hash,
+	)
+}
+
 // CalculateHash calculates hash of the Block
 func (b *Block) CalculateHash() []byte {
 	timestamp := new(bytes.Buffer)
