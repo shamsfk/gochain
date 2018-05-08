@@ -1,2 +1,2 @@
-# gochain
-Simple educational blockchain in Go
+# gosupchain
+Simple supply chain management system prototype using blockchain written in Go
