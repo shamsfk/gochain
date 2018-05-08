@@ -14,12 +14,20 @@ func (bc *Blockchain) GetBlocks() []*Block {
 func (bc *Blockchain) AddBlock(data *BlockData) {
 	lastBlock := bc.blocks[len(bc.blocks)-1]
 	newBlock := NewBlock(data, lastBlock.Hash)
+	newBlock.Index = len(bc.blocks)
 	bc.blocks = append(bc.blocks, newBlock)
 }
 
 // NewBlockchain creates a blockchain with genesis block
 func NewBlockchain() *Blockchain {
 	return &Blockchain{[]*Block{newGenesisBlock()}}
+}
+
+// ReplaceChain replaces current blockchain with new chain if new chain is longer
+func (bc *Blockchain) ReplaceChain(newBlocks []*Block) {
+	if len(newBlocks) > len(bc.blocks) {
+		bc.blocks = newBlocks
+	}
 }
 
 func newGenesisBlock() *Block {
