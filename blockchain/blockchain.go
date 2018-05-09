@@ -6,7 +6,7 @@ import (
 
 // Blockchain holds a slice of blocks
 type Blockchain struct {
-	blocks  []*Block
+	blocks  []Block
 	Version int
 }
 
@@ -30,9 +30,9 @@ func (bc Blockchain) AddBlock(data *BlockData) {
 }
 
 // NewBlockchain creates a blockchain with genesis block
-func NewBlockchain(version int) *Blockchain {
-	return &Blockchain{
-		blocks: []*Block{
+func NewBlockchain(version int) Blockchain {
+	return Blockchain{
+		blocks: []Block{
 			NewBlock(&BlockData{"Genesis Block"}, []byte{0}, version),
 		},
 		Version: version,

@@ -13,7 +13,7 @@ type Block struct {
 	Version   int
 	Index     int
 	Timestamp int64
-	Data      *BlockData
+	Data      *BlockData // it certainly will get huge and too expencive to pass by value
 	PrevHash  []byte
 	Hash      []byte
 }
@@ -45,7 +45,7 @@ func (b Block) CalculateHash() []byte {
 }
 
 // NewBlock creates and returns a new Block
-func NewBlock(data *BlockData, prevHash []byte, version int) *Block {
+func NewBlock(data *BlockData, prevHash []byte, version int) Block {
 	block := Block{
 		Version:   version,
 		Timestamp: time.Now().Unix(),
@@ -53,11 +53,11 @@ func NewBlock(data *BlockData, prevHash []byte, version int) *Block {
 		PrevHash:  prevHash,
 	}
 	block.Hash = block.CalculateHash()
-	return &block
+	return block
 }
 
 // ValidateBlock checks is block is valid and does indeed follows prevBlock
-func ValidateBlock(block *Block, prevBlock *Block) bool {
+func ValidateBlock(block Block, prevBlock Block) bool {
 	if block.Index != prevBlock.Index+1 {
 		return false
 	}
