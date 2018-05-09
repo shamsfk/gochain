@@ -13,9 +13,14 @@ type BlockData struct {
 	Data string
 }
 
-// ToBytes retuns []byte representation of data
-func (bd *BlockData) ToBytes() []byte {
-	return []byte(bd.Data)
+func (bd *BlockData) getHash() []byte {
+	hash := sha256.Sum256([]byte(bd.Data))
+	return hash[:]
+}
+
+// ToString returns string representation of a BlockData
+func (bd *BlockData) ToString() string {
+	return bd.Data
 }
 
 // Block holds each individual block info
@@ -29,10 +34,10 @@ type Block struct {
 
 // ToString returns string representation of a block
 func (b *Block) ToString() string {
-	return fmt.Sprintf("Index: %v\nTimestamp: %v\nData: %s\nPrevHash: %x\nHash: %x",
+	return fmt.Sprintf("Index:\t\t%v\nTimestamp:\t%v\nData:\t\t%s\nPrevHash:\t%x\nHash:\t\t%x",
 		b.Index,
 		b.Timestamp,
-		b.Data.ToBytes(),
+		b.Data.ToString(),
 		b.PrevHash,
 		b.Hash,
 	)
@@ -46,8 +51,8 @@ func (b *Block) CalculateHash() []byte {
 		fmt.Println("binary.Write failed:", err)
 	}
 
-	headers := bytes.Join([][]byte{b.PrevHash, b.Data.ToBytes(), timestamp.Bytes()}, []byte{})
-	hash := sha256.Sum256(headers)
+	block := bytes.Join([][]byte{b.PrevHash, b.Data.getHash(), timestamp.Bytes()}, []byte{})
+	hash := sha256.Sum256(block)
 
 	return hash[:]
 }

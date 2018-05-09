@@ -3,28 +3,28 @@ package main
 import (
 	"fmt"
 
-	bc "./blockchain"
-	cons "./console"
+	"./blockchain"
+	"./console"
 )
 
 func main() {
-	b := bc.NewBlockchain()
+	bc := blockchain.NewBlockchain()
 
-	data := &bc.BlockData{Data: "Send 1 BTC to Ivan"}
-	b.AddBlock(data)
+	data := &blockchain.BlockData{Data: "Send 1 BTC to Ivan"}
+	bc.AddBlock(data)
 
-	data = &bc.BlockData{Data: "Send 2 more BTC to Ivan"}
-	b.AddBlock(data)
+	data = &blockchain.BlockData{Data: "Send 2 more BTC to Ivan"}
+	bc.AddBlock(data)
 
-	console := cons.NewConsole()
+	cons := console.NewConsole()
 
-	console.RegisterFunction("printBlocks", func() {
-		for _, block := range b.GetBlocks() {
+	cons.RegisterFunction("print", func() {
+		for _, block := range bc.GetBlocks() {
 			fmt.Println()
 			fmt.Println(block.ToString())
 			fmt.Println()
 		}
 	})
 
-	console.Run()
+	cons.Run()
 }

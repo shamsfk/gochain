@@ -1,11 +1,11 @@
 package blockchain
 
-// Blockchain holds a list of blocks
+// Blockchain holds a slice of blocks
 type Blockchain struct {
 	blocks []*Block
 }
 
-// GetBlocks returns a pinter to blocks slice
+// GetBlocks returns a pointer to blocks slice
 func (bc *Blockchain) GetBlocks() []*Block {
 	return bc.blocks
 }
@@ -20,16 +20,9 @@ func (bc *Blockchain) AddBlock(data *BlockData) {
 
 // NewBlockchain creates a blockchain with genesis block
 func NewBlockchain() *Blockchain {
-	return &Blockchain{[]*Block{newGenesisBlock()}}
-}
-
-// ReplaceChain replaces current blockchain with new chain if new chain is longer
-func (bc *Blockchain) ReplaceChain(newBlocks []*Block) {
-	if len(newBlocks) > len(bc.blocks) {
-		bc.blocks = newBlocks
+	return &Blockchain{
+		[]*Block{
+			NewBlock(&BlockData{"Genesis Block"}, []byte{0}),
+		},
 	}
-}
-
-func newGenesisBlock() *Block {
-	return NewBlock(&BlockData{"Genesis Block"}, []byte{0})
 }

@@ -17,7 +17,6 @@ type Console struct {
 func NewConsole() *Console {
 	c := &Console{}
 	c.vm = otto.New()
-
 	return c
 }
 
@@ -33,10 +32,12 @@ func (c Console) Run() {
 		fmt.Print("> ")
 		text, _ := reader.ReadString('\n')
 
+		// stop console on .exit command
 		if text == ".exit\n" {
 			return
 		}
 
+		// execute command in a JS vm
 		value, err := c.vm.Run(text)
 		if err != nil {
 			fmt.Println("Error:", err)
