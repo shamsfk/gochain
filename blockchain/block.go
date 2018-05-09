@@ -8,23 +8,9 @@ import (
 	"time"
 )
 
-// BlockData holds Block's data
-type BlockData struct {
-	Data string
-}
-
-func (bd *BlockData) getHash() []byte {
-	hash := sha256.Sum256([]byte(bd.Data))
-	return hash[:]
-}
-
-// ToString returns string representation of a BlockData
-func (bd *BlockData) ToString() string {
-	return bd.Data
-}
-
 // Block holds each individual block info
 type Block struct {
+	Version   int
 	Index     int
 	Timestamp int64
 	Data      *BlockData
@@ -33,8 +19,9 @@ type Block struct {
 }
 
 // ToString returns string representation of a block
-func (b *Block) ToString() string {
-	return fmt.Sprintf("Index:\t\t%v\nTimestamp:\t%v\nData:\t\t%s\nPrevHash:\t%x\nHash:\t\t%x",
+func (b Block) ToString() string {
+	return fmt.Sprintf("Version:\t%v\nIndex:\t\t%v\nTimestamp:\t%v\nData:\t\t%s\nPrevHash:\t%x\nHash:\t\t%x",
+		b.Version,
 		b.Index,
 		b.Timestamp,
 		b.Data.ToString(),
@@ -44,7 +31,7 @@ func (b *Block) ToString() string {
 }
 
 // CalculateHash calculates hash of the Block
-func (b *Block) CalculateHash() []byte {
+func (b Block) CalculateHash() []byte {
 	timestamp := new(bytes.Buffer)
 	err := binary.Write(timestamp, binary.LittleEndian, b.Timestamp)
 	if err != nil {
@@ -58,14 +45,15 @@ func (b *Block) CalculateHash() []byte {
 }
 
 // NewBlock creates and returns a new Block
-func NewBlock(data *BlockData, prevHash []byte) *Block {
-	block := &Block{
+func NewBlock(data *BlockData, prevHash []byte, version int) *Block {
+	block := Block{
+		Version:   version,
 		Timestamp: time.Now().Unix(),
 		Data:      data,
 		PrevHash:  prevHash,
 	}
 	block.Hash = block.CalculateHash()
-	return block
+	return &block
 }
 
 // ValidateBlock checks is block is valid and does indeed follows prevBlock
