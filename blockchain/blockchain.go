@@ -11,8 +11,8 @@ type Blockchain struct {
 }
 
 // NewBlockchain creates a blockchain with genesis block
-func NewBlockchain(version int) Blockchain {
-	return Blockchain{
+func NewBlockchain(version int) *Blockchain {
+	return &Blockchain{
 		blocks: []*Block{
 			NewBlock(&BlockData{"Genesis Block"}, []byte{0}, version),
 		},
@@ -21,7 +21,7 @@ func NewBlockchain(version int) Blockchain {
 }
 
 // ToString returns string representation of a Blockchain
-func (bc Blockchain) String() string {
+func (bc *Blockchain) String() string {
 	var builder strings.Builder
 	for _, block := range bc.blocks {
 		builder.WriteRune('\n')
@@ -40,7 +40,7 @@ func (bc *Blockchain) AddBlock(data *BlockData) {
 }
 
 // ValidateBlockchain checks validity of every block in a given chain
-func ValidateBlockchain(bc Blockchain) bool {
+func ValidateBlockchain(bc *Blockchain) bool {
 	if len(bc.blocks) < 1 {
 		return false
 	}

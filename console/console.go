@@ -25,25 +25,30 @@ func (c Console) RegisterFunction(name string, function interface{}) {
 	c.vm.Set(name, function)
 }
 
+// RunJS runs js code on a vm
+func (c Console) RunJS(code string) error {
+	_, err := c.vm.Run(code)
+	return err
+}
+
 // Run executes console in a blocking endless loop
-func (c Console) Run() {
+func (c Console) Run(ch chan string) {
+	reader := bufio.NewReader(os.Stdin)
 	for {
-		reader := bufio.NewReader(os.Stdin)
-		fmt.Print("> ")
+		ch <- "> "
 		text, _ := reader.ReadString('\n')
 
-		// stop console on .exit command
 		if text == ".exit\n" {
-			return
+			os.Exit(0)
 		}
 
 		// execute command in a JS vm
 		value, err := c.vm.Run(text)
 		if err != nil {
-			fmt.Println("Error:", err)
+			ch <- fmt.Sprintln(err)
 		} else {
 			if value.IsDefined() {
-				fmt.Println(value)
+				ch <- fmt.Sprintln(value)
 			}
 		}
 
