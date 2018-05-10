@@ -1,14 +1,14 @@
-package main
+package console
 
 import (
 	"fmt"
 
-	"./blockchain"
-	"./console"
+	"github.com/shamsfk/gosuchain/blockchain"
 )
 
-func runConsole(bc *blockchain.Blockchain) {
-	cons := console.NewConsole()
+// RunConsole binds functions to JS vm? inits and runs the console
+func RunConsole(bc *blockchain.Blockchain) {
+	cons := NewConsole()
 
 	cons.RegisterFunction("_addBlock", func(dataStr string) {
 		data := blockchain.BlockData{Data: dataStr}
