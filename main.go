@@ -18,7 +18,7 @@ func main() {
 	})
 
 	cons.RegisterFunction("print", func() {
-		fmt.Println(bc.ToString())
+		fmt.Println(bc)
 	})
 
 	cons.RegisterFunction("validate", func() string {

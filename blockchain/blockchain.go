@@ -11,18 +11,18 @@ type Blockchain struct {
 }
 
 // ToString returns string representation of a Blockchain
-func (bc Blockchain) ToString() string {
-	builder := strings.Builder{}
+func (bc Blockchain) String() string {
+	var builder strings.Builder
 	for _, block := range bc.blocks {
 		builder.WriteRune('\n')
-		builder.WriteString(block.ToString())
+		builder.WriteString(block.String())
 		builder.WriteRune('\n')
 	}
 	return builder.String()
 }
 
 // AddBlock adds specified Block to the chain
-func (bc Blockchain) AddBlock(data *BlockData) {
+func (bc *Blockchain) AddBlock(data *BlockData) {
 	lastBlock := bc.blocks[len(bc.blocks)-1]
 	newBlock := NewBlock(data, lastBlock.Hash, bc.Version)
 	newBlock.Index = len(bc.blocks)

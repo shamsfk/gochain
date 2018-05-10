@@ -13,25 +13,24 @@ type Block struct {
 	Version   int
 	Index     int
 	Timestamp int64
-	Data      *BlockData // it certainly will get huge and too expencive to pass by value
+	Data      *BlockData // it certainly will get huge and too expensive to pass by value
 	PrevHash  []byte
 	Hash      []byte
 }
 
 // ToString returns string representation of a block
-func (b Block) ToString() string {
+func (b Block) String() string {
 	return fmt.Sprintf("Version:\t%v\nIndex:\t\t%v\nTimestamp:\t%v\nData:\t\t%s\nPrevHash:\t%x\nHash:\t\t%x",
 		b.Version,
 		b.Index,
 		b.Timestamp,
-		b.Data.ToString(),
+		b.Data.String(),
 		b.PrevHash,
 		b.Hash,
 	)
 }
 
-// CalculateHash calculates hash of the Block
-func (b Block) CalculateHash() []byte {
+func (b Block) calculateHash() []byte {
 	timestamp := new(bytes.Buffer)
 	err := binary.Write(timestamp, binary.LittleEndian, b.Timestamp)
 	if err != nil {
@@ -52,7 +51,7 @@ func NewBlock(data *BlockData, prevHash []byte, version int) Block {
 		Data:      data,
 		PrevHash:  prevHash,
 	}
-	block.Hash = block.CalculateHash()
+	block.Hash = block.calculateHash()
 	return block
 }
 
@@ -66,7 +65,7 @@ func ValidateBlock(block Block, prevBlock Block) bool {
 		return false
 	}
 
-	if string(block.CalculateHash()) != string(block.Hash) {
+	if string(block.calculateHash()) != string(block.Hash) {
 		return false
 	}
 
