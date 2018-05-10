@@ -14,8 +14,8 @@ type Console struct {
 }
 
 // NewConsole creates a console
-func NewConsole() *Console {
-	c := &Console{}
+func NewConsole() Console {
+	c := Console{}
 	c.vm = otto.New()
 	return c
 }
@@ -32,10 +32,10 @@ func (c Console) RunJS(code string) error {
 }
 
 // Run executes console in a blocking endless loop
-func (c Console) Run(ch chan string) {
+func (c Console) Run() {
 	reader := bufio.NewReader(os.Stdin)
 	for {
-		ch <- "> "
+		fmt.Print("> ")
 		text, _ := reader.ReadString('\n')
 
 		if text == ".exit\n" {
@@ -45,10 +45,10 @@ func (c Console) Run(ch chan string) {
 		// execute command in a JS vm
 		value, err := c.vm.Run(text)
 		if err != nil {
-			ch <- fmt.Sprintln(err)
+			fmt.Println(err)
 		} else {
 			if value.IsDefined() {
-				ch <- fmt.Sprintln(value)
+				fmt.Println(value)
 			}
 		}
 

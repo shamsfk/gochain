@@ -7,8 +7,8 @@ import (
 	"github.com/shamsfk/gosuchain/console"
 )
 
-// RunConsole binds functions to JS vm, inits and runs the console
-func RunConsole(bc *blockchain.Blockchain) {
+// InitConsole binds functions to JS vm, inits and runs the console
+func InitConsole(bc *blockchain.Blockchain) *console.Console {
 	cons := console.NewConsole()
 
 	cons.RegisterFunction("_addBlock", func(dataStr string) {
@@ -36,9 +36,5 @@ func RunConsole(bc *blockchain.Blockchain) {
 	`
 	cons.RunJS(initStr)
 
-	consCh := make(chan string)
-	go cons.Run(consCh)
-	for v := range consCh {
-		fmt.Print(v)
-	}
+	return &cons
 }

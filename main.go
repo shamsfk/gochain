@@ -6,5 +6,6 @@ import (
 
 func main() {
 	bc := blockchain.NewBlockchain(1)
-	RunConsole(bc)
+	cons := InitConsole(bc)
+	cons.Run()
 }
