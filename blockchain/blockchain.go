@@ -6,8 +6,18 @@ import (
 
 // Blockchain holds a slice of blocks
 type Blockchain struct {
-	blocks  []Block
+	blocks  []*Block
 	Version int
+}
+
+// NewBlockchain creates a blockchain with genesis block
+func NewBlockchain(version int) Blockchain {
+	return Blockchain{
+		blocks: []*Block{
+			NewBlock(&BlockData{"Genesis Block"}, []byte{0}, version),
+		},
+		Version: version,
+	}
 }
 
 // ToString returns string representation of a Blockchain
@@ -27,16 +37,6 @@ func (bc *Blockchain) AddBlock(data *BlockData) {
 	newBlock := NewBlock(data, lastBlock.Hash, bc.Version)
 	newBlock.Index = len(bc.blocks)
 	bc.blocks = append(bc.blocks, newBlock)
-}
-
-// NewBlockchain creates a blockchain with genesis block
-func NewBlockchain(version int) Blockchain {
-	return Blockchain{
-		blocks: []Block{
-			NewBlock(&BlockData{"Genesis Block"}, []byte{0}, version),
-		},
-		Version: version,
-	}
 }
 
 // ValidateBlockchain checks validity of every block in a given chain

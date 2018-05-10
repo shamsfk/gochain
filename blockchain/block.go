@@ -13,13 +13,25 @@ type Block struct {
 	Version   int
 	Index     int
 	Timestamp int64
-	Data      *BlockData // it certainly will get huge and too expensive to pass by value
+	Data      *BlockData
 	PrevHash  []byte
 	Hash      []byte
 }
 
+// NewBlock creates and returns a new Block
+func NewBlock(data *BlockData, prevHash []byte, version int) *Block {
+	block := Block{
+		Version:   version,
+		Timestamp: time.Now().Unix(),
+		Data:      data,
+		PrevHash:  prevHash,
+	}
+	block.Hash = block.calculateHash()
+	return &block
+}
+
 // ToString returns string representation of a block
-func (b Block) String() string {
+func (b *Block) String() string {
 	return fmt.Sprintf("Version:\t%v\nIndex:\t\t%v\nTimestamp:\t%v\nData:\t\t%s\nPrevHash:\t%x\nHash:\t\t%x",
 		b.Version,
 		b.Index,
@@ -30,7 +42,7 @@ func (b Block) String() string {
 	)
 }
 
-func (b Block) calculateHash() []byte {
+func (b *Block) calculateHash() []byte {
 	timestamp := new(bytes.Buffer)
 	err := binary.Write(timestamp, binary.LittleEndian, b.Timestamp)
 	if err != nil {
@@ -43,20 +55,8 @@ func (b Block) calculateHash() []byte {
 	return hash[:]
 }
 
-// NewBlock creates and returns a new Block
-func NewBlock(data *BlockData, prevHash []byte, version int) Block {
-	block := Block{
-		Version:   version,
-		Timestamp: time.Now().Unix(),
-		Data:      data,
-		PrevHash:  prevHash,
-	}
-	block.Hash = block.calculateHash()
-	return block
-}
-
 // ValidateBlock checks is block is valid and does indeed follows prevBlock
-func ValidateBlock(block Block, prevBlock Block) bool {
+func ValidateBlock(block *Block, prevBlock *Block) bool {
 	if block.Index != prevBlock.Index+1 {
 		return false
 	}

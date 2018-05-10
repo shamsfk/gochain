@@ -13,8 +13,8 @@ func main() {
 	cons := console.NewConsole()
 
 	cons.RegisterFunction("addBlock", func(dataStr string) {
-		data := &blockchain.BlockData{Data: dataStr}
-		bc.AddBlock(data)
+		data := blockchain.BlockData{Data: dataStr}
+		bc.AddBlock(&data)
 	})
 
 	cons.RegisterFunction("print", func() {
