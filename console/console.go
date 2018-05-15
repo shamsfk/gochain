@@ -25,13 +25,13 @@ func (c Console) RegisterFunction(name string, function interface{}) {
 	c.vm.Set(name, function)
 }
 
-// RunJS runs js code on a vm
-func (c Console) RunJS(code string) error {
+// ExecuteJS runs js code on a vm
+func (c Console) ExecuteJS(code string) error {
 	_, err := c.vm.Run(code)
 	return err
 }
 
-// Run executes console in a blocking endless loop
+// Run executes console in endless loop
 func (c Console) Run() {
 	reader := bufio.NewReader(os.Stdin)
 	for {

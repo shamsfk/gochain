@@ -11,16 +11,16 @@ import (
 func InitConsole(bc *blockchain.Blockchain) *console.Console {
 	cons := console.NewConsole()
 
-	cons.RegisterFunction("_addBlock", func(dataStr string) {
+	cons.RegisterFunction("__addBlock", func(dataStr string) {
 		data := blockchain.BlockData{Data: dataStr}
 		bc.AddBlock(&data)
 	})
 
-	cons.RegisterFunction("_print", func() {
+	cons.RegisterFunction("__print", func() {
 		fmt.Println(bc)
 	})
 
-	cons.RegisterFunction("_validate", func() string {
+	cons.RegisterFunction("__validate", func() string {
 		if blockchain.ValidateBlockchain(bc) {
 			return "Blockchain is valid"
 		}
@@ -29,12 +29,12 @@ func InitConsole(bc *blockchain.Blockchain) *console.Console {
 
 	initStr := `
 		var bc = {
-			addBlock: _addBlock,
-			print: _print,
-			validate: _validate
+			addBlock: __addBlock,
+			print: __print,
+			validate: __validate
 		}
 	`
-	cons.RunJS(initStr)
+	cons.ExecuteJS(initStr)
 
 	return &cons
 }
